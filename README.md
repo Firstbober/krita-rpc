@@ -14,4 +14,4 @@ You must run this as administrator.
 
 After installing pypresence package clone this repository or download source code from releases and unpack. 
 After unpacking copy `discord_rpc.desktop` and `discord_rpc` folder to pykrita catalog. 
-You can find this in Krita clicking `Settings -> Manager Resources -> Open Resource Folder` and here is pykrira catalog.
+You can find this in Krita clicking `Settings -> Manager Resources -> Open Resource Folder` and here is pykrita catalog.
