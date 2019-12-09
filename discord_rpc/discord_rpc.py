@@ -1,4 +1,4 @@
-# Extension by Fistbobr
+# Extension by Firstbober
 
 from krita import Extension
 from pypresence import Presence, Activity
