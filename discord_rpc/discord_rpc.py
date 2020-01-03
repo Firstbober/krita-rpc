@@ -1,7 +1,7 @@
 # Extension by Firstbober
 
 from krita import Extension
-from pypresence import Presence, Activity
+from pypresence import *
 import threading
 import time
 from PyQt5.QtCore import QObject, pyqtSignal
