@@ -1,17 +1,16 @@
-# Krita-rpc
-Discord Rich Presence extension for Krita
+# Krita DRP
+A Python plugin that adds Discord Rich Presence to Krita
 
-## Instalation
-Dependences:
-- Krita
-- Python 3.7
+## How to install
+1. Go to the "releases" page, and download the latest one.
+2. Press the `Windows + R` keys, the "Run" window will appear.
+3. Paste `%UserProfile%\AppData\Roaming\krita\pykrita` in this window, then click `OK`. This will open the "pykrita" folder.
+4. Extract the contents of the file you downloaded into the "pykrita" folder.
+5. Now open Krita, and click on `Settings -> Configure Krita…` in the menu bar.
+6. Go to `Python Plugin Manager`, and activate "Discord Rich Presence".
+7. There you go! You just need to restart Krita for the feature to activate.
 
-Install Pypresence with pip. Actual command at the time of creating this readme:
-```bash
-pip install https://github.com/qwertyquerty/pypresence/archive/3.1.0.zip
-```
-You must run this as administrator.
-
-After installing pypresence package clone this repository or download source code from releases and unpack. 
-After unpacking copy `discord_rpc.desktop` and `discord_rpc` folder to pykrita catalog. 
-You can find this in Krita clicking `Settings -> Manager Resources -> Open Resource Folder` and here is pykrita catalog.
+## Final comments
+This project doesn't belong to me. I just touched it up a bit and uploaded it.
+Note that idk what the hecc I'm doing.
+My version should be easier to setup tho.
