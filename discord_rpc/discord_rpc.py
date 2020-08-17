@@ -1,14 +1,14 @@
-# Extension by Firstbober
+# Extension by Fistbobr
 
 from krita import Extension
-from pypresence import *
+from .presence import Presence
 import threading
 import time
 from PyQt5.QtCore import QObject, pyqtSignal
 
 EXTENSION_ID = 'pykrita_discord_rpc'
 
-client_id = '541005130749968405'  # App ID. Change if you want
+client_id = '744403269237080127' #'541005130749968405'  # App ID. Change if you want
 
 RPC = Presence(client_id)  # Initialize the client class
 RPC.connect() # Start the handshake loop
@@ -34,10 +34,10 @@ class DiscordStatusThread (threading.Thread):
             # Detecting new document
             if(Krita.instance().activeDocument() != None):
                 if(self.updatedStatus == False):
-                    RPC.update(details="Working on " + str(Krita.instance().activeDocument().name()), large_image="drawing", small_image="krita_nothing", start=int(time.time()))
+                    RPC.update(details="Working on", state=str(Krita.instance().activeDocument().name()), large_image="krita_logo", start=int(time.time()))
                     self.updatedStatus = True
             else:
-                RPC.update(details="Nothing", large_image="krita_nothing")
+                RPC.update(details="Not currently drawing", large_image="krita_logo")
                 self.updatedStatus = False
             time.sleep(5)
         except:
@@ -46,7 +46,7 @@ class DiscordStatusThread (threading.Thread):
 # Class of extension
 class DiscordRpc(Extension):
     def __init__(self, parent):
-        RPC.update(details="Nothing", large_image="krita_nothing")
+        RPC.update(details="Not currently drawing", large_image="krita_logo")
         super().__init__(parent)
 
     def setup(self):
