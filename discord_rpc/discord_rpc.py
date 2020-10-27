@@ -14,23 +14,16 @@ client_id = '744403269237080127' #'541005130749968405'  # App ID. Change if you 
 RPC = Presence(client_id)  # Initialize the client class
 RPC.connect() # Start the handshake loop
 
-# The status thread 
-class DiscordStatusThread (threading.Thread):
-   def __init__(self):
-      threading.Thread.__init__(self, name="DRP Plugin Thread")
-      self.singleOpen = 0
-      self.file = ""
-   def run(self):
-      while True:
-        try:
-            # Closing this thread
-            if(Krita.instance().activeWindow() == None):
-                if(self.singleOpen >= 1):
-                    break
+# Class of extension
+class DiscordRpc(Extension):
+    def __init__(self, parent):
+        self.file = ""
+        self.timer = QTimer(self)
+        super().__init__(parent)
 
-                if(self.singleOpen == 0):
-                    self.singleOpen = 1
-
+    def update_RPC():
+       try:
+            a = Krita.instance().documents() # Maybe can fix linking with C objects
             # Detecting new document
             if(Krita.instance().activeDocument() != None):
                 if(self.file != Krita.instance().activeDocument().fileName()):
@@ -42,23 +35,17 @@ class DiscordStatusThread (threading.Thread):
             time.sleep(5)
         except Exception as e:
             # Хз как вывести эксепшн нормально
-            # with open("C:\\Users\\panko\\Desktop\\log.txt", "a") as f:
-            #    f.write(traceback.format_exc())
+            with open("C:\\Users\\panko\\Desktop\\log.txt", "a") as f:
+               f.write("%s\n" % time.time())
+               f.write(traceback.format_exc())
             # RPC.update(details="An exception occured", state=type(e).__name__ + ": " + str(e), large_image="krita_logo")
             # self.file = ""
-            # time.sleep(5)
+            time.sleep(5)
             pass
 
-
-# Class of extension
-class DiscordRpc(Extension):
-    def __init__(self, parent):
-        RPC.update(details="Idle", large_image="krita_logo")
-        super().__init__(parent)
-
     def setup(self):
-        DiscThread = DiscordStatusThread()
-        DiscThread.start()
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.update_RPC) 
 
     def createActions(self, window):
         pass
