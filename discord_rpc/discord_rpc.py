@@ -36,9 +36,9 @@ class DiscordRpc(Extension):
                 file = ""
         except Exception as e:
             # Хз как вывести эксепшн нормально
-            with open("C:\\Users\\panko\\Desktop\\log.txt", "a") as f:
-               f.write("%s\n" % time.time())
-               f.write(traceback.format_exc())
+            # with open("C:\\Users\\panko\\Desktop\\log.txt", "a") as f:
+            #    f.write("%s\n" % time.time())
+            #    f.write(traceback.format_exc())
             # RPC.update(details="An exception occured", state=type(e).__name__ + ": " + str(e), large_image="krita_logo")
             # file = ""
             pass
