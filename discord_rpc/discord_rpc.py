@@ -44,9 +44,10 @@ class DiscordStatusThread (threading.Thread):
             # Хз как вывести эксепшн нормально
             # with open("C:\\Users\\panko\\Desktop\\log.txt", "a") as f:
             #    f.write(traceback.format_exc())
-            RPC.update(details="An exception occured", state=type(e).__name__ + ": " + str(e), large_image="krita_logo")
-            self.file = ""
-            time.sleep(5)
+            # RPC.update(details="An exception occured", state=type(e).__name__ + ": " + str(e), large_image="krita_logo")
+            # self.file = ""
+            # time.sleep(5)
+            pass
 
 
 # Class of extension
