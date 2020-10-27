@@ -3,6 +3,7 @@
 from krita import Extension
 from .presence import Presence
 import threading
+import traceback
 import time
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -41,9 +42,12 @@ class DiscordStatusThread (threading.Thread):
             time.sleep(5)
         except Exception as e:
             # Хз как вывести эксепшн нормально
+            # with open("C:\\Users\\panko\\Desktop\\log.txt", "a") as f:
+            #    f.write(traceback.format_exc())
             RPC.update(details="An exception occured", state=type(e).__name__ + ": " + str(e), large_image="krita_logo")
             self.file = ""
             time.sleep(5)
+
 
 # Class of extension
 class DiscordRpc(Extension):
