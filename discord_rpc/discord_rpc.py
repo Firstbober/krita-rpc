@@ -5,7 +5,7 @@ from .presence import Presence
 import threading
 import traceback
 import time
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 
 EXTENSION_ID = 'pykrita_discord_rpc'
 
@@ -19,11 +19,12 @@ class DiscordRpc(Extension):
     def __init__(self, parent):
         self.file = ""
         self.timer = QTimer(self)
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.update_RPC)
         super().__init__(parent)
 
     def update_RPC():
-       try:
-            a = Krita.instance().documents() # Maybe can fix linking with C objects
+        try:
             # Detecting new document
             if(Krita.instance().activeDocument() != None):
                 if(self.file != Krita.instance().activeDocument().fileName()):
@@ -32,7 +33,6 @@ class DiscordRpc(Extension):
             else:
                 RPC.update(details="Idle", large_image="krita_logo")
                 self.file = ""
-            time.sleep(5)
         except Exception as e:
             # Хз как вывести эксепшн нормально
             with open("C:\\Users\\panko\\Desktop\\log.txt", "a") as f:
@@ -40,12 +40,10 @@ class DiscordRpc(Extension):
                f.write(traceback.format_exc())
             # RPC.update(details="An exception occured", state=type(e).__name__ + ": " + str(e), large_image="krita_logo")
             # self.file = ""
-            time.sleep(5)
             pass
 
     def setup(self):
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.update_RPC) 
+        self.timer.start()
 
     def createActions(self, window):
         pass
