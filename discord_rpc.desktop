@@ -4,5 +4,5 @@ ServiceTypes=Krita/PythonPlugin
 X-KDE-Library=discord_rpc
 X-Python-2-Compatible=false
 X-Krita-Manual=Manual.html
-Name=Discord RPC
-Comment=Discord Rich Status for Krita
+Name=Discord Rich Presence
+Comment=Add Discord Rich Presence support to Krita
