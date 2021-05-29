@@ -27,7 +27,7 @@ class DiscordRpc(Extension):
     def update_rpc(self):
         # Detecting new document
         if Krita.instance().activeDocument() is not None:
-            if self.time is not 0:
+            if self.time is 0:
                 self.time = time.time()
             if self.file != Krita.instance().activeDocument().fileName():
                 RPC.update(details="Drawing something cool",
