@@ -40,6 +40,10 @@ class DiscordRpc(Extension):
             self.time = 0
 
     # noinspection PyPep8Naming
+    def createActions(self, window):
+        pass
+            
+    # noinspection PyPep8Naming
     def windowClosed(self):
         self.timer.stop()
         pass
