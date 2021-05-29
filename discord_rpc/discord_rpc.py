@@ -39,17 +39,9 @@ class DiscordRpc(Extension):
             self.file = ""
             self.time = 0
 
-    # This is C methods so can't rename
-    # noinspection PyPep8Naming
-    def createActions(self, window):
-        pass
-
     # noinspection PyPep8Naming
     def windowClosed(self):
         self.timer.stop()
-        pass
-
-    def action_triggered(self):
         pass
 
 
