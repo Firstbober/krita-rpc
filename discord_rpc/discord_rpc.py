@@ -14,7 +14,7 @@ RPC = Presence(DISCORD_RPC_CLIENT_ID)  # Initialize the client class
 class DiscordRpc(Extension):
     def __init__(self, parent):
         super().__init__(parent)
-        self.file = ""
+        self.file = None
         self.time = 0
         self.timer = PyQt5.QtCore.QTimer(self)
         self.timer.setInterval(1000)
@@ -36,7 +36,7 @@ class DiscordRpc(Extension):
                 self.file = Krita.instance().activeDocument().fileName()
         else:
             RPC.update(details="Idle", large_image="krita_logo")
-            self.file = ""
+            self.file = None
             self.time = 0
 
     # noinspection PyPep8Naming
