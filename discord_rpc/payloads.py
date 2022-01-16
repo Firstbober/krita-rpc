@@ -28,8 +28,8 @@ class Payload:
                      small_image: str = None, small_text: str = None,
                      party_id: str = None, party_size: list = None,
                      join: str = None, spectate: str = None,
-                     match: str = None, instance: bool = True,
-                     activity: Union[bool, None] = True,
+                     match: str = None, buttons: list = None,
+                     instance: bool = True, activity: Union[bool, None] = True,
                      _rn: bool = True):
 
         # They should already be an int because we give typehints, but some people are fucking stupid and use
@@ -65,6 +65,7 @@ class Payload:
                         "spectate": spectate,
                         "match": match
                     },
+                    "buttons": buttons,
                     "instance": instance
                 }
             clear = False
@@ -198,7 +199,7 @@ class Payload:
     @classmethod
     def select_text_channel(cls, channel_id: str):
         payload = {
-            "cmd": "SELECT_VOICE_CHANNEL",
+            "cmd": "SELECT_TEXT_CHANNEL",
             "args": {
                 "channel_id": str(channel_id),
             },
@@ -208,7 +209,9 @@ class Payload:
         return cls(payload)
 
     @classmethod
-    def subscribe(cls, event: str, args: dict = {}):
+    def subscribe(cls, event: str, args=None):
+        if args is None:
+            args = {}
         payload = {
             "cmd": "SUBSCRIBE",
             "args": args,
@@ -219,7 +222,9 @@ class Payload:
         return cls(payload)
 
     @classmethod
-    def unsubscribe(cls, event: str, args: dict = {}):
+    def unsubscribe(cls, event: str, args=None):
+        if args is None:
+            args = {}
         payload = {
             "cmd": "UNSUBSCRIBE",
             "args": args,
