@@ -26,18 +26,21 @@ class DiscordRpc(Extension):
 
     def update_rpc(self):
         # Detecting new document
-        if Krita.instance().activeDocument() is not None:
-            if self.time is 0:
-                self.time = time.time()
-            if self.file != Krita.instance().activeDocument().fileName():
-                RPC.update(details="Drawing something cool",
-                           state=str(Krita.instance().activeDocument().name()) or "Unnamed",
-                           large_image="krita_logo", start=int(self.time))
-                self.file = Krita.instance().activeDocument().fileName()
-        else:
-            RPC.update(details="Idle", large_image="krita_logo")
-            self.file = None
-            self.time = 0
+        try:
+            if Krita.instance().activeDocument() is not None:
+                if self.time is 0:
+                    self.time = time.time()
+                if self.file != Krita.instance().activeDocument().fileName():
+                    RPC.update(details="Drawing something cool",
+                               state=str(Krita.instance().activeDocument().name()) or "Unnamed",
+                               large_image="krita_logo", start=int(self.time))
+                    self.file = Krita.instance().activeDocument().fileName()
+            else:
+                RPC.update(details="Idle", large_image="krita_logo")
+                self.file = None
+                self.time = 0
+        except:
+            pass
 
     # noinspection PyPep8Naming
     def createActions(self, window):
