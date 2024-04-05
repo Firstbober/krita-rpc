@@ -19,6 +19,7 @@ class DiscordRpc(Extension):
         self.timer = PyQt5.QtCore.QTimer(self)
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.update_rpc)
+        self.version = f"Krita {str(app.version())}";
 
     def setup(self):
         RPC.connect()  # Start the handshake loop
@@ -31,12 +32,15 @@ class DiscordRpc(Extension):
                 if self.time is 0:
                     self.time = time.time()
                 if self.file != Krita.instance().activeDocument().fileName():
-                    RPC.update(details="Drawing something cool",
+                    RPC.update(details="Drawing something cool!",
                                state=str(Krita.instance().activeDocument().name()) or "Unnamed",
-                               large_image="krita_logo", start=int(self.time))
+                               large_image="krita_logo", 
+                               start=int(self.time),
+                               large_text=self.version )
+                    
                     self.file = Krita.instance().activeDocument().fileName()
             else:
-                RPC.update(details="Idle", large_image="krita_logo")
+                RPC.update(details="Idle", large_image="krita_logo", large_text=self.version)
                 self.file = None
                 self.time = 0
         except:
