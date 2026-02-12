@@ -1,5 +1,7 @@
 # Krita DRP
-A Python plugin that adds Discord Rich Presence support to Krita
+A Python plugin that adds Discord Rich Presence support to Krita  
+<br>
+<img width="288" height="130" alt="Discord_RPC_example" src="https://github.com/user-attachments/assets/6db56115-27fe-4b36-92dd-b62aab41ef1c" />
 
 ## How to install
 1. Press the "Code" button and download zip file.
