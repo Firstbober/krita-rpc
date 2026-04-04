@@ -1,10 +1,8 @@
 import asyncio
 import inspect
 import json
-import os
 import struct
 import sys
-import tempfile
 from typing import Union, Optional
 
 # TODO: Get rid of this import * lol
@@ -102,22 +100,31 @@ class BaseClient:
                 len(payload)) +
             payload.encode('utf-8'))
 
-    async def handshake(self):
-        if sys.platform == 'linux' or sys.platform == 'darwin':
-            self.sock_reader, self.sock_writer = await asyncio.open_unix_connection(self.ipc_path)
-        elif sys.platform == 'win32' or sys.platform == 'win64':
-            self.sock_reader = asyncio.StreamReader(loop=self.loop)
-            reader_protocol = asyncio.StreamReaderProtocol(
-                self.sock_reader, loop=self.loop)
-            try:
-                self.sock_writer, _ = await self.loop.create_pipe_connection(lambda: reader_protocol, self.ipc_path)
-            except FileNotFoundError:
-                raise InvalidPipe
-        self.send_data(0, {'v': 1, 'client_id': self.client_id})
-        preamble = await self.sock_reader.read(8)
-        code, length = struct.unpack('<ii', preamble)
-        data = json.loads(await self.sock_reader.read(length))
-        if 'code' in data:
-            raise DiscordError(data['code'], data['message'])
-        if self._events_on:
-            self.sock_reader.feed_data = self.on_event
+    async def handshake(self, timeout=5):
+        try:
+            if sys.platform == 'linux' or sys.platform == 'darwin':
+                self.sock_reader, self.sock_writer = await asyncio.wait_for(
+                    asyncio.open_unix_connection(self.ipc_path),
+                    timeout=timeout
+                )
+            elif sys.platform == 'win32' or sys.platform == 'win64':
+                self.sock_reader = asyncio.StreamReader(loop=self.loop)
+                reader_protocol = asyncio.StreamReaderProtocol(
+                    self.sock_reader, loop=self.loop)
+                try:
+                    self.sock_writer, _ = await asyncio.wait_for(
+                        self.loop.create_pipe_connection(lambda: reader_protocol, self.ipc_path),
+                        timeout=timeout
+                    )
+                except FileNotFoundError:
+                    raise InvalidPipe
+            self.send_data(0, {'v': 1, 'client_id': self.client_id})
+            preamble = await asyncio.wait_for(self.sock_reader.read(8), timeout=timeout)
+            code, length = struct.unpack('<ii', preamble)
+            data = json.loads(await asyncio.wait_for(self.sock_reader.read(length), timeout=timeout))
+            if 'code' in data:
+                raise DiscordError(data['code'], data['message'])
+            if self._events_on:
+                self.sock_reader.feed_data = self.on_event
+        except asyncio.TimeoutError:
+            raise PyPresenceException('Connection to Discord timed out (timeout={0}s)'.format(timeout))

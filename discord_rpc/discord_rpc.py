@@ -18,7 +18,7 @@ except ImportError:
 
 DISCORD_RPC_CLIENT_ID = '744403269237080127'  # '541005130749968405'  # App ID. Change if you want
 EXTENSION_ID = 'pykrita_discord_rpc'
-
+RECONNECT_INTERVAL = 30  # Try to reconnect every 30 seconds if offline
 
 RPC = Presence(DISCORD_RPC_CLIENT_ID)  # Initialize the client class
 
@@ -30,12 +30,22 @@ class DiscordRpc(Extension):
         self.timer = QTimer(self)
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.update_rpc)
+        
+        self.reconnect_timer = QTimer(self)
+        self.reconnect_timer.setInterval(RECONNECT_INTERVAL * 1000)
+        self.reconnect_timer.timeout.connect(self.try_reconnect)
 
         self.version = f"Krita {str(Krita.instance().version())}"
 
     def setup(self):
-        RPC.connect()  # Start the handshake loop
+        RPC.connect()
         self.timer.start()
+        self.reconnect_timer.start()
+    
+    def try_reconnect(self):
+        if not RPC.connected:
+            print('Retrying connection...')
+            RPC.reconnect()
 
     def update_rpc(self):
         # Detecting new document
@@ -77,6 +87,7 @@ class DiscordRpc(Extension):
     # noinspection PyPep8Naming
     def windowClosed(self):
         self.timer.stop()
+        self.reconnect_timer.stop()
         pass
 
 
