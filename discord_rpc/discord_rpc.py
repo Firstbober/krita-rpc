@@ -1,9 +1,20 @@
 # Extension by Fistbobr
 
-from krita import Extension
+from krita import Extension, Krita
 from .presence import Presence
 import time
-import PyQt5.QtCore
+import asyncio
+
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+try:
+    from PyQt6.QtCore import QTimer
+except ImportError:
+    from PyQt5.QtCore import QTimer
 
 DISCORD_RPC_CLIENT_ID = '744403269237080127'  # '541005130749968405'  # App ID. Change if you want
 EXTENSION_ID = 'pykrita_discord_rpc'
@@ -16,10 +27,11 @@ class DiscordRpc(Extension):
         super().__init__(parent)
         self.file = None
         self.time = 0
-        self.timer = PyQt5.QtCore.QTimer(self)
+        self.timer = QTimer(self)
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.update_rpc)
-        self.version = f"Krita {str(app.version())}";
+
+        self.version = f"Krita {str(Krita.instance().version())}"
 
     def setup(self):
         RPC.connect()  # Start the handshake loop
@@ -28,23 +40,35 @@ class DiscordRpc(Extension):
     def update_rpc(self):
         # Detecting new document
         try:
-            if Krita.instance().activeDocument() is not None:
-                if self.time is 0:
+            doc = Krita.instance().activeDocument()
+
+            if doc is not None:
+                if self.time == 0:
                     self.time = time.time()
-                if self.file != Krita.instance().activeDocument().fileName():
-                    RPC.update(details="Drawing something cool!",
-                               state=str(Krita.instance().activeDocument().name()) or "Unnamed",
-                               large_image="krita_logo", 
-                               start=int(self.time),
-                               large_text=self.version )
-                    
-                    self.file = Krita.instance().activeDocument().fileName()
+
+                filename = doc.fileName() or ""
+
+                if self.file != filename:
+                    RPC.update(
+                        details="Drawing something cool!",
+                        state=str(doc.name()) or "Unnamed",
+                        large_image="krita_logo",
+                        start=int(self.time),
+                        large_text=self.version
+                    )
+
+                    self.file = filename
+
             else:
-                RPC.update(details="Idle", large_image="krita_logo", large_text=self.version)
+                RPC.update(
+                    details="Idle",
+                    large_image="krita_logo",
+                    large_text=self.version
+                )
                 self.file = None
                 self.time = 0
-        except:
-            pass
+        except Exception as e:
+            print("RPC update error:", e)
 
     # noinspection PyPep8Naming
     def createActions(self, window):
